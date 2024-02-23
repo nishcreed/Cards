@@ -39,3 +39,33 @@
     color: white;
     transform: rotateY(180deg);
   }
+
+  .hidden{
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .flip{
+    transform: rotateY('180deg');
+  }
+
+  #card1 {
+    right:10px;
+    top:10px;
+  }
+  #card2 {
+    right:20px;
+    top:20px;
+  }
+  #card3 {
+    right:30px;
+    top:30px;
+  }
+  #card4 {
+    right:40px;
+    top:40px;
+  }
+  #card5 {
+    right:50px;
+    top:50px;
+  }
