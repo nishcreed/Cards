@@ -19,3 +19,10 @@ export const shuffleCards = (value) => {
     }
 }
 
+export const log = (type,username) => {
+    return{
+        type:type,
+        username:username
+    }
+}
+

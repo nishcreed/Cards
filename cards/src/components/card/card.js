@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
 import './card.css';
-import { useEffect } from 'react';
 import { flipCard, shuffleCards } from '../../redux/game/gameAction';
 
 
@@ -8,29 +7,30 @@ export default function Card({ind}) {
 
     const cardTypes = ['Cat','Defuse','Shuffle','Explode'];
     var random= Math.floor(Math.random() * cardTypes.length);
-    var type = cardTypes[random];
+    const shuffle = useSelector(state => state.shuffle);
     const cnt = useSelector(state => state.cnt);
     const start = useSelector(state => state.start);
-    const shuffle = useSelector(state => state.shuffle);
     const dispatch = useDispatch();
-    console.log(cnt,shuffle)
+    var type = cardTypes[random];
+    console.log('ind:',ind,'type:',type)
 
 
     if(shuffle){
+        // console.log('shuffled',ind)
         var card = document.getElementById(`card${ind}`);
         card.style.opacity = '1';
-        if(cnt==4){
+        // console.log('hello',ind,document.getElementById(`card4`).style.pointerEvents,document.getElementById(`card4`).style.cursor)
+        if(ind == 4){
             card.style.pointerEvents = 'auto';
             card.style.cursor = 'pointer';
         }
-
         var inner = document.getElementById(`inner${ind}`);
         inner.style.transform = '';
         setTimeout(()=>{
             random= Math.floor(Math.random() * cardTypes.length);
             type = cardTypes[random];
             dispatch(shuffleCards(false));
-        },600);    
+        },800);    
     }
 
 
@@ -65,13 +65,13 @@ export default function Card({ind}) {
     }
     return(
         <div id={`card${ind}`} className="card" 
-        style={start && (cnt == ind) ? {pointerEvents:'auto',cursor:'pointer'}:{pointerEvents:'none',cursor:'none'}} 
+        style={(start && (cnt == ind)) ? {pointerEvents:'auto',cursor:'pointer'}:{pointerEvents:'none',cursor:'none'}} 
         onClick={flip}>
         <div id={`inner${ind}`} className="card-inner">
             <div className="card-front">
             </div>
             <div className="card-back">
-            <span style={{margin:'0 auto'}}>{type}</span>
+            <span className='type'>{shuffle ? '' : type}</span>
             </div>
         </div>
         </div>
