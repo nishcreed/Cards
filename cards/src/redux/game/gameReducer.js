@@ -1,3 +1,13 @@
+const cardTypes = ['Cat','Defuse','Explode','Shuffle']
+
+function randomCards(){
+    var cards = [];
+    for(let i=0;i<5;i++){
+        cards.push(cardTypes[Math.floor(Math.random() * cardTypes.length)])
+    }
+    return cards.slice()
+}
+
 const initState = {
     cnt: 4,
     won: false,
@@ -5,6 +15,7 @@ const initState = {
     defuse: 0,
     start:false,
     shuffle:false,
+    cards:randomCards(),
     msg:'Press start to begin',
     username:null
 }
@@ -53,7 +64,9 @@ const gameReducer = (state = initState, action) => {
                 ...initState,
                 shuffle:action.value,
                 start:true,
-                msg: 'From the beginning :)'
+                cards:action.value ? randomCards() : state.cards,
+                msg: 'From the beginning :)',
+                username:state.username
             };
 
         case 'start':
@@ -67,11 +80,7 @@ const gameReducer = (state = initState, action) => {
                 ...state,
                 username:action.username
             }
-        case 'logout':
-            return {
-                ...initState,
-                username:null
-            }
+
 
         default: return state;
     }

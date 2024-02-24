@@ -24,7 +24,7 @@ export default function Navbar() {
                     <Link className="nav-link active" aria-current="page" to={'/leaderboard'}>Leaderboard</Link>
                     </li>
                 </ul>
-                <ul className="navbar-nav mb-2 mb-lg-0">
+                {/* <ul className="navbar-nav mb-2 mb-lg-0">
                     {   !username &&
                         <li className="nav-item ml-auto">
                         <Link className="nav-link" to={'/login'}>Login</Link>
@@ -43,12 +43,7 @@ export default function Navbar() {
                         </li> 
                         </>
                     }
-                    {   !username &&
-                        <li className="nav-item ml-auto">
-                        <Link className="nav-link" to={'/register'} >Register</Link>
-                        </li>
-                    }
-                </ul>
+                </ul> */}
                 </div>
             </div>
         </nav>
