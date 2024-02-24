@@ -28,10 +28,11 @@ const gameReducer = (state = initState, action) => {
                 cnt: state.cnt - 1,
                 msg: 'Nice!'
             }
-            if(newState.cnt < 0 )
+            if(newState.cnt < 0 ){
                 return {
-                ...newState,
-                won: true,
+                    ...newState,
+                    won: true,
+                }
             }
             return newState;
         case 'defuse':
@@ -39,7 +40,7 @@ const gameReducer = (state = initState, action) => {
                 ...state,
                 cnt: state.cnt - 1,
                 defuse: state.defuse + 1,
-                won : state.cnt - 1 < 0 ? true : false,
+                won : (state.cnt - 1) < 0 ? true : false,
                 msg: `You have ${state.defuse+1} defuse card(s).`
 
             }
@@ -49,7 +50,7 @@ const gameReducer = (state = initState, action) => {
                 ...state, 
                 cnt: state.cnt - 1,
                 defuse:state.defuse - 1,
-                won: state.cnt - 1 < 0 ? true : false,
+                won: (state.cnt - 1) < 0 ? true : false,
                 msg:`One defuse card has been used. You have ${state.defuse-1} defuse card(s) left.`
             }
             else{
@@ -80,8 +81,6 @@ const gameReducer = (state = initState, action) => {
                 ...state,
                 username:action.username
             }
-
-
         default: return state;
     }
 }

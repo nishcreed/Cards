@@ -2,6 +2,8 @@ import { useSelector,useDispatch } from 'react-redux';
 import { log, shuffleCards, startGame } from '../../redux/game/gameAction';
 import './game.css'
 import Card from '../card/card';
+import axios from 'axios';
+import { useEffect } from 'react';
 
 export default function Game(){
     const start = useSelector(state => state.start);
@@ -15,6 +17,19 @@ export default function Game(){
         ip.value = '';
         dispatch(log(username));
     }
+
+    useEffect(()=>{
+        if(won){
+            console.log('hi');
+            axios.post('/leaderboard',{username:username})
+            .then((res)=>{
+                console.log(res.data.message);
+            })
+            .catch((err)=>{
+                console.log(err);
+            })
+        }
+    },[won])
 
     return (
         <div className='game'>

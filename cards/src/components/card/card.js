@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import './card.css';
 import { flipCard, shuffleCards } from '../../redux/game/gameAction';
+import { useEffect } from 'react';
 
 
 export default function Card({ind}) {
@@ -11,24 +12,23 @@ export default function Card({ind}) {
     const cards = useSelector(state => state.cards);
     const dispatch = useDispatch();
     var type = cards[ind];
-    console.log('ind:',ind,'type:',type)
 
-
-    if(shuffle){
-        var card = document.getElementById(`card${ind}`);
-        card.style.opacity = '1';
-        if(ind == 4){
-            card.style.pointerEvents = 'auto';
-            card.style.cursor = 'pointer';
+    useEffect(()=>{
+        if(shuffle){
+            var card = document.getElementById(`card${ind}`);
+            card.style.opacity = '1';
+            if(ind == 4){
+                card.style.pointerEvents = 'auto';
+                card.style.cursor = 'pointer';
+            }
+            var inner = document.getElementById(`inner${ind}`);
+            inner.style.transform = '';
+            setTimeout(()=>{
+    
+                dispatch(shuffleCards(false));
+            },800);    
         }
-        var inner = document.getElementById(`inner${ind}`);
-        inner.style.transform = '';
-        setTimeout(()=>{
-
-            dispatch(shuffleCards(false));
-        },800);    
-    }
-
+    },[shuffle])
 
     const flip = () =>{
         var inner = document.getElementById(`inner${ind}`);
