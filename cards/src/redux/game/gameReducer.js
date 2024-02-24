@@ -11,7 +11,6 @@ function randomCards(){
 const initState = {
     cnt: 4,
     won: false,
-    lost: false,
     defuse: 0,
     start:false,
     shuffle:false,
@@ -56,7 +55,6 @@ const gameReducer = (state = initState, action) => {
             else{
                 return {
                     ...state, 
-                    lost:true,
                     msg:'You have lost :(..... Press start for another game.'
                 }
             }
@@ -78,8 +76,13 @@ const gameReducer = (state = initState, action) => {
             }
         case 'login':
             return {
-                ...state,
+                ...initState,
                 username:action.username
+            }
+        
+        case 'state':
+            return {
+                ...action.state
             }
         default: return state;
     }

@@ -1,22 +1,46 @@
 import { useSelector,useDispatch } from 'react-redux';
-import { log, shuffleCards, startGame } from '../../redux/game/gameAction';
+import { log, setState, shuffleCards, startGame } from '../../redux/game/gameAction';
 import './game.css'
 import Card from '../card/card';
 import axios from 'axios';
 import { useEffect } from 'react';
 
 export default function Game(){
-    const start = useSelector(state => state.start);
-    const msg = useSelector(state => state.msg);
-    const won = useSelector(state => state.won);
-    const username = useSelector(state => state.username)
+    const state = useSelector(state => state);
+    const start = state.start;
+    const msg = state.msg;
+    const won = state.won;
+    const username = state.username;
     const dispatch = useDispatch();
-    const login = () => {
+
+    const login = async () => {
         const ip = document.getElementById('username');
         const username = ip.value;
         ip.value = '';
-        dispatch(log(username));
+
+        const res = await axios.get(`/game?username=${username}`);
+        if (res.status === 200) {
+            console.log(res.data);
+            alert(`Your game has been restored, ${username}`)
+            dispatch(setState(res.data));
+        } else if (res.status === 204) {
+            dispatch(log(username));
+        } else {
+            console.log('Unexpected status code:', res.status);
+        }
     }
+
+    const saveState = () => {
+        console.log(state)
+        axios.post('/game',state)
+        .then((res)=>{
+            console.log(res.data.message);
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+    }
+
 
     useEffect(()=>{
         if(won){
@@ -38,7 +62,7 @@ export default function Game(){
                 <button onClick={login} type="button" class="btn btn-outline-secondary">Log in</button>
             </div>
 
-            <button type="button" className="btn btn-outline-secondary" style={{pointerEvents:!username?'none':''}}
+            <button type="button" className="btn btn-outline-light" style={{pointerEvents:!username?'none':''}}
             onClick={() =>{start==false ? dispatch(startGame()) : dispatch(shuffleCards(true))}}>Start</button>
             <span className='msg heading'>{won ? "You have won!..Press start for another game" : (!username?'Log in to play':msg) }</span>
             <div className='cards'>
@@ -47,6 +71,10 @@ export default function Game(){
                 <Card ind={2}/>
                 <Card ind={3}/>
                 <Card ind={4}/>
+            </div>
+            <div className='btm' style={{opacity:!start ? '0' : '1',pointerEvents:!start ? 'none' : 'auto'}}>
+                <button onClick={saveState} type="button" className="btn btn-outline-light">Save</button>
+                <span>Press save to resume later</span>
             </div>
         </div>
     )

@@ -26,3 +26,10 @@ export const log = (username) => {
     }
 }
 
+export const setState = (state) => {
+    return {
+        type:'state',
+        state:state
+    }
+}
+
