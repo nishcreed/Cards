@@ -11,6 +11,12 @@ A player wins the game once he draws all 5 cards from the deck and there is no c
 - If the card is a defusing card, then the card is removed from the deck. This card can be used to defuse one bomb that may come in subsequent cards drawn from the deck.
 - If the card is a shuffle card, then the game is restarted and the deck is filled with 5 cards again.
 
+## Technologies
+- React
+- Redux
+- Redis
+- Go
+
 ## How to run locally
 - Install [NodeJs](https://nodejs.org/en), [Golang](https://go.dev/) and [Redis](https://redis.io/)
 - Dwonload the zip of this repository
