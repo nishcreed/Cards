@@ -52,7 +52,7 @@ const gameReducer = (state = initState, action) => {
                 cnt: state.cnt - 1,
                 defuse:state.defuse - 1,
                 won: (state.cnt - 1) < 0 ? true : false,
-                msg:`One defuse card has been used. You have ${state.defuse-1} defuse card(s) left.`
+                msg: (state.cnt - 1) < 0 ? "You have won!..Press start for another game" : `One defuse card has been used. You have ${state.defuse-1} defuse card(s) left.`
             }
             else{
                 return {
