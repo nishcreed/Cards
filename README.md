@@ -30,3 +30,5 @@ A player wins the game once he draws all 5 cards from the deck and there is no c
   - ```npm run depend```
   - ```npm run dev```
 - Open a browser and type ```http://localhost:3000``` in address bar
+
+[Demo](https://drive.google.com/drive/folders/1l-s2sX1hbMLD6Z3WfVIBR6XoWPnZ8gnA?usp=sharing)
