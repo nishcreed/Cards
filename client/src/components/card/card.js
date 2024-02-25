@@ -117,7 +117,6 @@ export default function Card({ind}) {
             <div className="card-front">
             </div>
             <div className="card-back" style={{backgroundColor: (shuffle? '#8B0000' :(type ? getBackColor(type) : '#8B0000'))}}>
-            {/* <span className='type' style={{color:type=='Cat'?'#333333':'white'}}>{shuffle ? '' : getCard(type)}</span> */}
             <span className="symbol top-left">{getSymbol(type)}</span>
             <span className="symbol top-right">{getSymbol(type)}</span>
             <span className="symbol bottom-left">{getSymbol(type)}</span>

@@ -1,4 +1,4 @@
-const cardTypes = ['Cat','Cat','Cat','Cat']
+const cardTypes = ['Cat','Defuse','Explode','Shuffle']
 
 function randomCards(){
     var cards = [];

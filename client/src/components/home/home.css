@@ -1,8 +1,6 @@
 #home{
     color: white;
     opacity: 1;
-    /* font-size: 25px; */
-    /* color: #333; */
 }
 
 
@@ -25,7 +23,7 @@
     color: #FFF8DC ;
 }
 
-.rules-heading,.how-heading {
+.rules-heading {
     margin-top: 20px;
     margin-bottom: 10px;
 }
@@ -54,3 +52,90 @@
     font-style: italic;
     color: #ADD8E6;
 }
+
+.how-card {
+background-color: transparent;
+width: 800px;
+height: 200px;
+border: 4px solid #f1f1f1;
+perspective: 1000px;
+margin:0 auto;
+border-radius: 4px;
+}
+
+.how-card-inner {
+position: relative;
+width: 100%;
+height: 100%;
+text-align: center;
+transition: transform 0.8s;
+transform-style: preserve-3d;
+}
+
+.how-card:hover .how-card-inner {
+transform: rotateY(180deg);
+}
+
+.how-card-front, .how-card-back {
+position: absolute;
+width: 100%;
+height: 100%;
+-webkit-backface-visibility: hidden;
+backface-visibility: hidden;
+}
+
+.how-card-front {
+background-color: #FFF8DC;
+color: black;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+height: 100%;
+}
+
+.how-card-back {
+background-color: #8B0000;
+color: white;
+transform: rotateY(180deg);
+padding: 8px;
+}
+
+.how-span{
+    color: #8B0000;
+    font-size: 40px;
+}
+
+.how-para {
+    color: #FFF8DC;
+    font-size: 1.3rem;
+}
+
+.rules-list {
+list-style-type: none;
+padding: 0;
+}
+
+.rules-list li {
+color: #8B0000;
+margin-bottom: 10px;
+padding: 15px;
+border-radius: 8px;
+background-color: #FFF8DC;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.rules-list li::before {
+content: "•";
+color: #8B0000; 
+font-size: 18px;
+margin-right: 8px;
+}
+
+.card-types {
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+  
+

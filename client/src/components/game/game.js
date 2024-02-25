@@ -13,21 +13,6 @@ export default function Game(){
     const username = state.username;
     const dispatch = useDispatch();
 
-    const login = async () => {
-        const ip = document.getElementById('username');
-        const username = ip.value;
-        ip.value = '';
-
-        const res = await axios.get(`/game?username=${username}`);
-        if (res.status === 200) {
-            alert(`Your game has been restored, ${username}`)
-            dispatch(setState(res.data));
-        } else if (res.status === 204) {
-            dispatch(log(username));
-        } else {
-            console.log('Unexpected status code:', res.status);
-        }
-    }
 
     const saveState = () => {
         axios.post('/game',state)
@@ -54,10 +39,6 @@ export default function Game(){
 
     return (
         <div className='game'>
-            <div class="input-group" style={{width:'30%',marginBottom:'30px'}}>
-                <input type="text" id="username" class="form-control" placeholder={username?`Logged in as ${username}`:'Log in with an username to play'} aria-label="Text input with segmented dropdown button" />
-                <button onClick={login} type="button" class="btn btn-outline-secondary">Log in</button>
-            </div>
 
             <button type="button" className="btn btn-outline-light" style={{pointerEvents:!username?'none':''}}
             onClick={() =>{start==false ? dispatch(startGame()) : dispatch(shuffleCards(true))}}>Start</button>
