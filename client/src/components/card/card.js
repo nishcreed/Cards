@@ -81,6 +81,34 @@ export default function Card({ind}) {
         }, 600);
 
     }
+
+    const getSymbol = (type) => {
+        switch (type) {
+            case "Cat":
+              return <span className="symbol">🐱</span>;
+            case "Shuffle":
+              return <span className="symbol">↻</span>;
+            case "Defuse":
+              return <span className="symbol">✨</span>;
+            case "Explode":
+              return <span className="symbol">💥</span>;
+            default:
+              return "Unknown";
+          }
+    }
+    const getBackColor = (type) => {
+        switch(type){
+            case 'Explode':
+                return '#333333'
+            case 'Cat':
+                return '#FFF8DC'
+            case 'Shuffle':
+                return '#32CD32'
+            case 'Defuse':
+                return '#008080'
+        }
+        
+    }
     return(
         <div id={`card${ind}`} className="card" 
         style={(start && (cnt == ind)) ? {pointerEvents:'auto',cursor:'pointer'}:{pointerEvents:'none',cursor:'none'}} 
@@ -88,8 +116,14 @@ export default function Card({ind}) {
         <div id={`inner${ind}`} className="card-inner">
             <div className="card-front">
             </div>
-            <div className="card-back">
-            <span className='type'>{shuffle ? '' : type}</span>
+            <div className="card-back" style={{backgroundColor: (shuffle? '#8B0000' :(type ? getBackColor(type) : '#8B0000'))}}>
+            {/* <span className='type' style={{color:type=='Cat'?'#333333':'white'}}>{shuffle ? '' : getCard(type)}</span> */}
+            <span className="symbol top-left">{getSymbol(type)}</span>
+            <span className="symbol top-right">{getSymbol(type)}</span>
+            <span className="symbol bottom-left">{getSymbol(type)}</span>
+            <span className="symbol bottom-right">{getSymbol(type)}</span>
+
+            <span className="center-text" style={{color:type == 'Cat' ? 'black' : ''}}>{shuffle ? '' : type}</span>
             </div>
         </div>
         </div>

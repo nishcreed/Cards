@@ -20,7 +20,6 @@ export default function Game(){
 
         const res = await axios.get(`/game?username=${username}`);
         if (res.status === 200) {
-            console.log(res.data);
             alert(`Your game has been restored, ${username}`)
             dispatch(setState(res.data));
         } else if (res.status === 204) {
@@ -31,7 +30,6 @@ export default function Game(){
     }
 
     const saveState = () => {
-        console.log(state)
         axios.post('/game',state)
         .then((res)=>{
             console.log(res.data.message);
@@ -44,7 +42,6 @@ export default function Game(){
 
     useEffect(()=>{
         if(won){
-            console.log('hi');
             axios.post('/leaderboard',{username:username})
             .then((res)=>{
                 console.log(res.data.message);
@@ -73,7 +70,7 @@ export default function Game(){
                 <Card ind={4}/>
             </div>
             <div className='btm' style={{opacity:!start ? '0' : '1',pointerEvents:!start ? 'none' : 'auto'}}>
-                <button onClick={saveState} type="button" className="btn btn-outline-light">Save</button>
+                <button onClick={()=>{saveState();alert('Your progress has been saved')}} type="button" className="btn btn-outline-light">Save</button>
                 <span>Press save to resume later</span>
             </div>
         </div>

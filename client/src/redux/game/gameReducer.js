@@ -1,4 +1,4 @@
-const cardTypes = ['Cat','Defuse','Explode','Shuffle']
+const cardTypes = ['Cat','Cat','Cat','Cat']
 
 function randomCards(){
     var cards = [];
@@ -16,7 +16,8 @@ const initState = {
     shuffle:false,
     cards:randomCards(),
     msg:'Press start to begin',
-    username:null
+    username:null,
+    lBoard:false
 }
 
 const gameReducer = (state = initState, action) => {
@@ -83,6 +84,11 @@ const gameReducer = (state = initState, action) => {
         case 'state':
             return {
                 ...action.state
+            }
+        case 'lBoard':
+            return {
+                ...state,
+                lBoard : action.value
             }
         default: return state;
     }

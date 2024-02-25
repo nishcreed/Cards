@@ -1,5 +1,4 @@
 export const flipCard = (name) => {
-    console.log(name)
     return {
         type: name
     }
@@ -30,6 +29,13 @@ export const setState = (state) => {
     return {
         type:'state',
         state:state
+    }
+}
+
+export const lBoardUpdate = (value) => {
+    return {
+        type:'lBoard',
+        value:value
     }
 }
 

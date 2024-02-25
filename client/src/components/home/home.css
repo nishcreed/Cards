@@ -1,0 +1,56 @@
+#home{
+    color: white;
+    opacity: 1;
+    /* font-size: 25px; */
+    /* color: #333; */
+}
+
+
+.body{
+    width: 70%;
+    margin: 0 auto;
+}
+
+.heading-home {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #FFF8DC;
+}
+.explode{
+    color: #8B0000;
+}
+
+.sub-heading {
+    margin-bottom: 20px;
+    color: #FFF8DC ;
+}
+
+.rules-heading,.how-heading {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.info {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.card-list, .rules-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.card-list li, .rules-list li {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.card-list li span, .rules-list li span {
+    margin-right: 10px;
+    font-size: 1.8rem;
+}
+
+.hope {
+    font-style: italic;
+    color: #ADD8E6;
+}

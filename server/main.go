@@ -1,16 +1,35 @@
 package main
 
 import (
-	// "errors"
 	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"sort"
 	"strconv"
+	"sync"
+	"time"
+	// "errors"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 	"github.com/redis/go-redis/v9"
 )
+
+var (
+	upgrader      = websocket.Upgrader{
+		CheckOrigin: func(r *http.Request) bool {
+			return true
+		},
+	}
+	clients       = make(map[*websocket.Conn]bool)
+	clientLock    sync.Mutex
+	leaderboardCh = make(chan struct{})
+)
+
+var client *redis.Client
+var ctx context.Context
 
 type leaderboard struct {
 	Username string `json:"username"`
@@ -21,30 +40,92 @@ type newUserRequest struct {
 	Username string `json:"username"`
 }
 
-// var users = []leaderboard{
-// 	{Username: "creed", Score: 2},
-// 	{Username: "qwer", Score: 4},
-// 	{Username: "qqaaz", Score: 6},
-// }
+type state struct {
+	Username string   `json:"username"`
+	Cnt      int      `json:"cnt"`
+	Won      bool     `json:"won"`
+	Defuse   int      `json:"defuse"`
+	Start    bool     `json:"start"`
+	Shuffle  bool     `json:"shuffle"`
+	Cards    []string `json:"cards"`
+	Msg      string   `json:"msg"`
+}
 
-var client *redis.Client
-var ctx context.Context
+func notifyLeaderboardChange() {
+	message := []byte("Leaderboard updated")
 
-// func db() {
+	clientLock.Lock()
+	defer clientLock.Unlock()
 
-// 	err := client.Set(ctx, "foo", "bar", 0).Err()
-// 	if err != nil {
-// 		panic(err)
-// 	}
+	for conn := range clients {
+		err := conn.WriteMessage(websocket.TextMessage, message)
+		if err != nil {
+			fmt.Println("Error sending leaderboard change notification to client:", err)
+		} else {
+			fmt.Println("Notification sent to client")
+		}
+	}
+}
 
-// 	val, err := client.Get(ctx, "foo").Result()
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	fmt.Println("foo", val)
-// }
+
+func wsHandler(c *gin.Context) {
+	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		fmt.Println("Error upgrading to WebSocket:", err)
+		return
+	}
+
+	clientLock.Lock()
+	clients[conn] = true
+	clientLock.Unlock()
+
+	for range leaderboardCh {
+		notifyLeaderboardChange()
+	}
+	conn.Close()
+}
+
+
+func seed() {
+
+	client = redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+	defer client.Close()
+
+	ctx = context.Background()
+	currentLeaderboard := client.HGetAll(ctx, "leaderboard").Val()
+
+	if len(currentLeaderboard) == 0 {
+
+		users := []leaderboard{
+			{"Creed", 8},
+			{"Binod", 9},
+			{"Caitlyn", 7},
+			{"David", 2},
+		}
+		for _, user := range users {
+			err := client.HSet(ctx, "leaderboard", user.Username, user.Score).Err()
+			if err != nil {
+				fmt.Println("Error during seeding:", err)
+				return
+			}
+		}
+	}
+}
+
 
 func getLeaderboard(c *gin.Context) {
+
+	client = redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+	defer client.Close()
+
 	ctx = context.Background()
 	currentLeaderboard := client.HGetAll(ctx, "leaderboard").Val()
 
@@ -61,32 +142,21 @@ func getLeaderboard(c *gin.Context) {
 			Score:    score,
 		})
 	}
-	fmt.Printf("%T \n %v", users, users)
+	sort.Slice(users, func(i, j int) bool {
+		return users[i].Score > users[j].Score
+	})
 	c.IndentedJSON(http.StatusOK, users)
 }
 
-// func postUsers(c *gin.Context) {
-// 	var newUserReq newUserRequest
-
-// 	if err := c.BindJSON(&newUserReq); err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON payload"})
-// 		return
-// 	}
-
-// 	// Check if the user already exists
-// 	for i, user := range users {
-// 		if user.Username == newUserReq.Username {
-// 			users[i].Score += 1
-// 			c.JSON(http.StatusOK, gin.H{"message": "Score increased"})
-// 			return
-// 		}
-// 	}
-
-// 	users = append(users, leaderboard{Username: newUserReq.Username, Score: 1})
-// 	c.JSON(http.StatusOK, gin.H{"message": "User added"})
-// }
-
 func postLeaderboard(c *gin.Context) {
+
+	client = redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+	defer client.Close()
+
 	var newUserReq newUserRequest
 
 	if err := c.BindJSON(&newUserReq); err != nil {
@@ -107,48 +177,41 @@ func postLeaderboard(c *gin.Context) {
 		if err != nil {
 			fmt.Println("Error incrementing score:", err)
 			return
+		} else{
+			fmt.Println("Score incremented for", username)
+			c.JSON(http.StatusOK, gin.H{"message": "User added"})
 		}
-		fmt.Println("Score incremented for", username)
-		c.JSON(http.StatusOK, gin.H{"message": "User added"})
 	} else {
 		err := client.HSet(ctx, "leaderboard", username, 1).Err()
 		if err != nil {
 			fmt.Println("Error setting score:", err)
 			return
+		} else{
+			fmt.Println("Username", username, "added with score 1")
+			c.JSON(http.StatusOK, gin.H{"message": "Score got incremented"})
 		}
-		fmt.Println("Username", username, "added with score 1")
-		c.JSON(http.StatusOK, gin.H{"message": "Score got incremented"})
 	}
+	defer func() {
+        time.Sleep(500 * time.Millisecond)
+        leaderboardCh <- struct{}{}
+    }()
 }
 
-// const initState = {
-//     cnt: 4,
-//     won: false,
-//     defuse: 0,
-//     start:false,
-//     shuffle:false,
-//     cards:randomCards(),
-//     msg:'Press start to begin',
-//     username:null
-// }
 
-type state struct {
-	Username string   `json:"username"`
-	Cnt      int      `json:"cnt"`
-	Won      bool     `json:"won"`
-	Defuse   int      `json:"defuse"`
-	Start    bool     `json:"start"`
-	Shuffle  bool     `json:"shuffle"`
-	Cards    []string `json:"cards"`
-	Msg      string   `json:"msg"`
-}
 
 func postGame(c *gin.Context) {
+
+	client = redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+	defer client.Close()
+
 	var newState state
 
-	fmt.Print(newState)
 
-	err := c.BindJSON(&newState); 
+	err := c.BindJSON(&newState)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON payload"})
 		return
@@ -216,10 +279,16 @@ func postGame(c *gin.Context) {
 }
 
 func getGame(c *gin.Context) {
+	client = redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+	defer client.Close()
+
 	ctx = context.Background()
 	username := c.Query("username")
 	currentState, err := client.HGetAll(ctx, "user_state:"+username).Result()
-	fmt.Print(err)
 	if err != nil || len(currentState) == 0 {
 		c.JSON(http.StatusNoContent, gin.H{"error": "Failed to retrieve game state of user"})
 		return
@@ -250,23 +319,27 @@ func getGame(c *gin.Context) {
 
 	currentStateJson.Msg = currentState["msg"]
 
-	fmt.Print(currentStateJson)
 	c.IndentedJSON(http.StatusOK, currentStateJson)
 }
 
-func main() {
-	client = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
-		DB:       0,
-	})
-	defer client.Close()
-	fmt.Printf("%v", client)
-
+func initialize() {
+	
 	router := gin.Default()
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	router.Use(cors.New(config))
+	router.GET("/ws", func(c *gin.Context) {
+		fmt.Println("New connection")
+		wsHandler(c)
+	})
 	router.GET("/leaderboard", getLeaderboard)
 	router.POST("/leaderboard", postLeaderboard)
 	router.POST("/game", postGame)
 	router.GET("/game", getGame)
 	router.Run("localhost:8000")
+}
+
+func main() {
+	seed()
+	initialize()
 }

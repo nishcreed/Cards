@@ -5,6 +5,7 @@
     perspective: 1000px;
     position: absolute;
     transition: opacity 0.8s;
+    border-radius: 10px;
   }
   
   .card-inner {
@@ -27,27 +28,34 @@
     height: 100%;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+    border-radius: 10px;
   }
   
   .card-front {
-    background-color: #bbb;
+    background-color: #8B0000;
     color: black;
   }
   
   .card-back {
-    background-color: #2980b9;
+    /* background-color: #2980b9; */
     color: white;
     transform: rotateY(180deg);
     height: 100%;
     width: 100%;
-    display: flex;
+    /* display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
+    position: relative;
   }
 
 
-  .type{
-    font-size: 30px;
+  .center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: white;
   }
 
   #card1 {
@@ -69,4 +77,30 @@
   #card5 {
     right:50px;
     top:50px;
+  }
+
+  .symbol {
+    position: absolute;
+    font-size: 24px;
+    color: white;
+  }
+  
+  .top-left {
+    top: 5px;
+    left: 8px;
+  }
+  
+  .top-right {
+    top: 5px;
+    right: 30px;
+  }
+  
+  .bottom-left {
+    bottom: 35px;
+    left: 5px;
+  }
+  
+  .bottom-right {
+    bottom: 35px;
+    right: 30px;
   }

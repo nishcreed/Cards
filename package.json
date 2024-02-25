@@ -1,0 +1,21 @@
+{
+  "name": "cards",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "depend": "npm install && cd client && npm install && cd ../server && go mod download && go mod tidy",
+    "dev": "concurrently \"cd server && go run .\" \"cd client && npm start\" "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nishcreed/Cards.git"
+  },
+  "author": "Nishaanth",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nishcreed/Cards/issues"
+  },
+  "homepage": "https://github.com/nishcreed/Cards#readme"
+}
