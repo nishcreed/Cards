@@ -1,5 +1,5 @@
 import { useSelector,useDispatch } from 'react-redux';
-import { log, setState, shuffleCards, startGame } from '../../redux/game/gameAction';
+import { log, resetWon, setState, shuffleCards, startGame } from '../../redux/game/gameAction';
 import './game.css'
 import Card from '../card/card';
 import axios from 'axios';
@@ -15,9 +15,11 @@ export default function Game(){
 
 
     const saveState = () => {
+        dispatch(resetWon());
         axios.post('/game',state)
         .then((res)=>{
             console.log(res.data.message);
+            
         })
         .catch((err)=>{
             console.log(err);
@@ -30,6 +32,7 @@ export default function Game(){
             axios.post('/leaderboard',{username:username})
             .then((res)=>{
                 console.log(res.data.message);
+                dispatch(resetWon());
             })
             .catch((err)=>{
                 console.log(err);
@@ -42,7 +45,7 @@ export default function Game(){
 
             <button type="button" className="btn btn-outline-light" style={{pointerEvents:!username?'none':''}}
             onClick={() =>{start==false ? dispatch(startGame()) : dispatch(shuffleCards(true))}}>Start</button>
-            <span className='msg heading'>{won ? "You have won!..Press start for another game" : (!username?'Log in to play':msg) }</span>
+            <span className='msg heading'>{!username?'Log in to play':msg}</span>
             <div className='cards'>
                 <Card ind={0}/>
                 <Card ind={1}/>

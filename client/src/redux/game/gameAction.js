@@ -39,3 +39,9 @@ export const lBoardUpdate = (value) => {
     }
 }
 
+export const resetWon = () => {
+    return {
+        type:'resetWon'
+    }
+}
+

@@ -32,6 +32,7 @@ const gameReducer = (state = initState, action) => {
                 return {
                     ...newState,
                     won: true,
+                    msg: "You have won!..Press start for another game"
                 }
             }
             return newState;
@@ -41,7 +42,7 @@ const gameReducer = (state = initState, action) => {
                 cnt: state.cnt - 1,
                 defuse: state.defuse + 1,
                 won : (state.cnt - 1) < 0 ? true : false,
-                msg: `You have ${state.defuse+1} defuse card(s).`
+                msg: (state.cnt - 1) < 0 ? "You have won!..Press start for another game" :`You have ${state.defuse+1} defuse card(s).`
 
             }
         case 'explode':
@@ -89,6 +90,11 @@ const gameReducer = (state = initState, action) => {
             return {
                 ...state,
                 lBoard : action.value
+            }
+        case 'resetWon':
+            return {
+                ...state,
+                won:false
             }
         default: return state;
     }
