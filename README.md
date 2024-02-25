@@ -27,8 +27,8 @@ A player wins the game once he draws all 5 cards from the deck and there is no c
 - Start the Redis server by running ```redis-server``` in a terminal (wsl in windows)
 - In the extracted folder, run the following commands in order:
   - ```npm install```
-  - ```npm run depend```
-  - ```npm run dev```
+  - ```npm run depend``` (this will install all the dependencies of client and server)
+  - ```npm run dev``` (this will start the client and server concurrently)
 - Open a browser and type ```http://localhost:3000``` in address bar
 
 [Demo](https://drive.google.com/drive/folders/1l-s2sX1hbMLD6Z3WfVIBR6XoWPnZ8gnA?usp=sharing)
