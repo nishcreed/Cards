@@ -53,14 +53,33 @@
     color: #ADD8E6;
 }
 
+
 .how-card {
 background-color: transparent;
-width: 800px;
+width: 100%;
 height: 200px;
 border: 4px solid #f1f1f1;
 perspective: 1000px;
 margin:0 auto;
 border-radius: 4px;
+}
+
+@media screen and (max-width: 968px) {
+    .how-card {
+        height: 250px; 
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .how-card {
+        height: 350px; 
+    }
+}
+
+@media screen and (max-width: 580px) {
+    .how-card {
+        height: 450px;
+    }
 }
 
 .how-card-inner {
