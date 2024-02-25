@@ -31,4 +31,4 @@ A player wins the game once he draws all 5 cards from the deck and there is no c
   - ```npm run dev``` (this will start the client and server concurrently)
 - Open a browser and type ```http://localhost:3000``` in address bar
 
-[Demo](https://drive.google.com/drive/folders/1l-s2sX1hbMLD6Z3WfVIBR6XoWPnZ8gnA?usp=sharing)
+[Demo](https://drive.google.com/drive/folders/1TzRFGkeuTtra8zQ2C0_jLdOmkALy3J8h?usp=sharing)
